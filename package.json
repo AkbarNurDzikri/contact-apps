@@ -1,0 +1,22 @@
+{
+  "name": "contact-apps",
+  "version": "1.0.0",
+  "description": "Learn nodejs (express) with WPU",
+  "main": "app.js",
+  "scripts": {
+    "start-dev": "nodemon ./app.js"
+  },
+  "author": "dzikrinurakbar94@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "express-validator": "^6.15.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

@@ -1,0 +1,28 @@
+<%- include('layouts/header') %>
+<%- include('layouts/navbar') %>
+<div class="container mt-3">
+  <h1 class="text-center">Daftar Users</h1>
+  <table class="table table-striped text-center">
+    <tr>
+      <th>No</th>
+      <th>Nama</th>
+      <th>Email</th>
+    </tr>
+    <% if (mahasiswa.length < 1) { %>
+      <tr>
+      <td>No Data</td>
+      </tr>
+    <% } %>
+
+    <% let i = 1; %>
+    <% mahasiswa.forEach(mhs => { %>
+      <tr>
+        <td><%= i++ %></td>
+        <td><%= mhs.nama %></td>
+        <td><%= mhs.email %></td>
+      </tr>
+    <% }) %>
+  </table>
+</div>
+<%- include('layouts/footer') %>
+  

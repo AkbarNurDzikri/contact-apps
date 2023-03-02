@@ -1,0 +1,21 @@
+<%- include('layouts/header') %>
+<%- include('layouts/navbar') %>
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-4">
+      <h2>Detail Contact</h2>
+      <% if (!contact) { %>
+        <div class="alert alert-danger fw-bold" role="alert">Kontak tidak ditemukan ! <br> <a href="/contact" class="alert-link fw-light">Back to Contacts</a></div>
+      <% } else { %>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><%= contact.nama %></h5>
+            <h6 class="card-subtitle"><%= contact.email %></h6>
+            <a href="/contact" class="text-decoration-none badge rounded-pill bg-success">Back</a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<%- include('layouts/footer') %>

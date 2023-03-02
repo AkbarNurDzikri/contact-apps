@@ -1,0 +1,43 @@
+<%- include('layouts/header') %>
+<%- include('layouts/navbar') %>
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Daftar Kontak</h2>
+      <a href="/contact/add" class="btn btn-sm btn-primary mb-2">New</a>
+      <% if (msg.length !== 0) { %>
+        <div class="alert alert-success fw-bold text-center" role="alert"><%= msg %></div>
+      <% } %>
+      <table class="table table-striped">
+        <caption>List of Contact</caption>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Opsi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (contacts.length === 0) { %>
+            <tr>
+              <td colspan="4">
+                <div class="alert alert-danger fw-bold text-center" role="alert">No Data</div>
+              </td>
+            </tr>
+          <% } %>
+          <% let i = 1; %>
+          <% contacts.forEach(contact => { %>
+            <tr>
+              <td><%= i++ %></td>
+              <td><%= contact.nama %></td>
+              <td><%= contact.email %></td>
+              <td><a href="/contact/<%= contact.nama %>" class="text-decoration-none badge rounded-pill bg-primary"><i class="bi bi-info-circle"></i> Detail</a></td>
+            </tr>
+          <% }) %>
+        </tbody>  
+      </table>
+    </div>
+  </div>
+</div>
+<%- include('layouts/footer') %>
