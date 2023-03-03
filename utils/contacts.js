@@ -44,4 +44,21 @@ const checkDuplicate = (nama) => {
   return contacts.find((contact) => contact.nama.toLowerCase() === nama.toLowerCase());
 };
 
-module.exports = {loadContact, findContact, addContact, checkDuplicate};
+// delete contact
+const deleteContact = (nama) => {
+  const contacts = loadContact();
+  const filteredContacts = contacts.filter((contact) => contact.nama !== nama);
+  saveContacts(filteredContacts);
+};
+
+// process update contacts
+const updateContacts = (newContact) => {
+  const contacts = loadContact();
+  // delete old contact when nama same the oldNama 
+  const filteredContacts = contacts.filter((contact) => contact.nama !== newContact.oldNama);
+  delete newContact.oldNama; // delete property in object
+  filteredContacts.push(newContact);
+  saveContacts(filteredContacts);
+};
+
+module.exports = {loadContact, findContact, addContact, checkDuplicate, deleteContact, updateContacts};

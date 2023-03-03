@@ -10,7 +10,9 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title"><%= contact.nama %></h5>
-            <h6 class="card-subtitle"><%= contact.email %></h6>
+            <h6 class="card-subtitle mb-3"><%= contact.email %></h6>
+            <a href="/contact/edit/<%= contact.nama %>" class="text-decoration-none badge rounded-pill bg-primary">Edit</a>
+            <a href="/contact/delete/<%= contact.nama %>" class="text-decoration-none badge rounded-pill bg-danger" onclick="return confirm('Yakin hapus kontak ini?' )">Delete</a>
             <a href="/contact" class="text-decoration-none badge rounded-pill bg-success">Back</a>
           </div>
         </div>
