@@ -1,13 +1,16 @@
 const express = require('express')
 const app = express()
 const port = 3000
-// const {loadContact, findContact, addContact, checkDuplicate, deleteContact, updateContacts} = require('./utils/contacts');
 require('./utils/db');
 const Contact = require('./model/contact');
 const {body, validationResult, check} = require('express-validator');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
+const methodOverride = require('method-override');
+
+// setup method-override
+app.use(methodOverride('_method'));
 
 // define ejs
 app.set('view engine', 'ejs');
@@ -52,7 +55,6 @@ app.get('/', (req, res) => {
 });
 
 app.get('/contact', async (req, res) => {
-  // const contacts = loadContact();
   const contacts = await Contact.find();
   
   res.render('contact', {
@@ -72,8 +74,8 @@ app.get('/contact/add', (req, res) => {
 // process create contact
 app.post('/contact', [
   check('email', 'Email tidak valid').isEmail(),
-  body('nama').custom((value) => {
-    const duplicate = checkDuplicate(value);
+  body('nama').custom(async (value) => {
+    const duplicate = await Contact.findOne({nama: value});
     if(duplicate) {
       throw new Error (value + ' sudah digunakan !');
     }
@@ -89,30 +91,27 @@ app.post('/contact', [
       errors: errors.array()
     });
   } else {
-    addContact(req.body);
-    // send flash message
-    req.flash('msg', 'Data kontak berhasil ditambahkan !');
-    res.redirect('/contact');
+    // addContact(req.body);
+    Contact.insertMany(req.body)
+      .then(() => {
+        // send flash message
+        req.flash('msg', 'Data kontak berhasil ditambahkan !');
+        res.redirect('/contact');
+      })
   }
 });
 
 // delete contact
-app.get('/contact/delete/:nama', (req, res) => {
-  const contact = findContact(req.params.nama);
-  
-  if(!contact) {
-    res.status(404);
-    res.send('<h1>404</h1>');
-  } else {
-    deleteContact(req.params.nama);
+app.delete('/contact', (req, res) => {
+  Contact.deleteOne({nama: req.body.nama}).then(() => {
     req.flash('msg', 'Data kontak berhasil dihapus !');
     res.redirect('/contact');
-  }
+  });
 });
 
 // edit contact
-app.get('/contact/edit/:nama', (req, res) => {
-  const contact = findContact(req.params.nama);
+app.get('/contact/edit/:nama', async (req, res) => {
+  const contact = await Contact.findOne({nama: req.params.nama});
   res.render('edit-contact', {
     title: 'Edit Contact',
     contact,
@@ -120,10 +119,10 @@ app.get('/contact/edit/:nama', (req, res) => {
 });
 
 // process update contact
-app.post('/contact/update', [
+app.put('/contact', [
   check('email', 'Email tidak valid').isEmail(),
-  body('nama').custom((value, {req}) => {
-    const duplicate = checkDuplicate(value);
+  body('nama').custom(async (value, {req}) => {
+    const duplicate = await Contact.findOne({nama: value});
     if(value !== req.body.oldNama && duplicate) {
       throw new Error (value + ' sudah digunakan !');
     }
@@ -140,16 +139,24 @@ app.post('/contact/update', [
       contact: req.body,
     });
   } else {
-    updateContacts(req.body);
-    // send flash message
-    req.flash('msg', 'Data kontak berhasil di update !');
-    res.redirect('/contact');
+    Contact.updateOne(
+      {_id: req.body._id},
+      {
+        $set: {
+          nama: req.body.nama,
+          email: req.body.email,
+        }
+      }
+    ).then(() => {
+      // send flash message
+      req.flash('msg', 'Data kontak berhasil di update !');
+      res.redirect('/contact'); 
+    });
   }
 });
 
 // detail contact
 app.get('/contact/:nama', async (req, res) => {
-  // const contact = findContact(req.params.nama);
   const contact = await Contact.findOne({nama: req.params.nama});
 
   res.render('detail', {
