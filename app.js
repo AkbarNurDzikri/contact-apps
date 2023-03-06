@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const {loadContact, findContact, addContact, checkDuplicate, deleteContact, updateContacts} = require('./utils/contacts');
+// const {loadContact, findContact, addContact, checkDuplicate, deleteContact, updateContacts} = require('./utils/contacts');
+require('./utils/db');
+const Contact = require('./model/contact');
 const {body, validationResult, check} = require('express-validator');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -49,8 +51,9 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/contact', (req, res) => {
-  const contacts = loadContact();
+app.get('/contact', async (req, res) => {
+  // const contacts = loadContact();
+  const contacts = await Contact.find();
   
   res.render('contact', {
     title: 'Contact Page',
@@ -145,8 +148,9 @@ app.post('/contact/update', [
 });
 
 // detail contact
-app.get('/contact/:nama', (req, res) => {
-  const contact = findContact(req.params.nama);
+app.get('/contact/:nama', async (req, res) => {
+  // const contact = findContact(req.params.nama);
+  const contact = await Contact.findOne({nama: req.params.nama});
 
   res.render('detail', {
     title: 'Detail Contact',
